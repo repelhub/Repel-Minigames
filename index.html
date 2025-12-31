@@ -36,15 +36,20 @@
       box-shadow: 0 0 15px #00eaff;
       padding: 20px;
       border-radius: 12px;
+      height: 80vh;
+      overflow-y: auto;
     }
 
     .right-panel {
-      flex: 1;
+      flex: 2;
       background: #111;
       border: 2px solid #ff00ff;
       box-shadow: 0 0 15px #ff00ff;
       padding: 20px;
       border-radius: 12px;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .section-title {
@@ -103,6 +108,14 @@
     .tag.AUTOCLICKERS { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
     .tag.LOCKED { background: #555; box-shadow: 0 0 8px #555; }
 
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: black;
+    }
+
     .preview-title {
       font-size: 18px;
       margin-bottom: 10px;
@@ -114,21 +127,6 @@
       opacity: 0.85;
       margin-bottom: 15px;
     }
-
-    .play-btn {
-      padding: 8px 16px;
-      background: #00eaff;
-      border: none;
-      border-radius: 6px;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px #00eaff;
-    }
-
-    .play-btn:hover {
-      background: #33f3ff;
-    }
   </style>
 </head>
 <body>
@@ -138,6 +136,7 @@
     <div class="left-panel">
       <div class="section-title">NOW PLAYING</div>
 
+      <!-- SPORTCLICK -->
       <div class="game-card" onclick="selectGame('Sportclick')">
         <div class="game-title">Sportclick</div>
         <div class="game-desc">Click-spammer balloon game with upgrades.</div>
@@ -147,15 +146,17 @@
         </div>
       </div>
 
-      <div class="game-card" onclick="selectGame('GameRace')">
-        <div class="game-title">Repel: Game-race</div>
-        <div class="game-desc">Mini racing prototype with lane dodging.</div>
+      <!-- TAXI QUEST -->
+      <div class="game-card" onclick="selectGame('TaxiQuest')">
+        <div class="game-title">Taxi Quest</div>
+        <div class="game-desc">Deliver passengers, dodge traffic, earn cash.</div>
         <div class="tags">
           <div class="tag NEW">NEW</div>
           <div class="tag PLAYABLE">PLAYABLE</div>
         </div>
       </div>
 
+      <!-- LASER DRIFT -->
       <div class="game-card" onclick="selectGame('LaserDrift')">
         <div class="game-title">Laser Drift</div>
         <div class="game-desc">Top-down neon drift survival.</div>
@@ -165,66 +166,94 @@
         </div>
       </div>
 
-      <div class="game-card" onclick="selectGame('NeonTaxi')">
-        <div class="game-title">Neon Taxi</div>
-        <div class="game-desc">Deliver passengers, dodge traffic, earn cash.</div>
+      <!-- SPACE BREAKER -->
+      <div class="game-card" onclick="selectGame('SpaceBreaker')">
+        <div class="game-title">Space Breaker</div>
+        <div class="game-desc">Shoot asteroids and survive the void.</div>
         <div class="tags">
-          <div class="tag NEW">NEW</div>
           <div class="tag PLAYABLE">PLAYABLE</div>
         </div>
       </div>
 
-      <div class="game-card" onclick="selectGame('ComingSoon')">
-        <div class="game-title">Coming Soon</div>
-        <div class="game-desc">A secret project incubating inside Repelhub.</div>
+      <!-- INFINITE RUN -->
+      <div class="game-card" onclick="selectGame('InfiniteRun')">
+        <div class="game-title">Infinite Run</div>
+        <div class="game-desc">Endless runner with obstacles and speed.</div>
         <div class="tags">
-          <div class="tag LOCKED">LOCKED</div>
-          <div class="tag STANDBY">Stand-by</div>
+          <div class="tag PLAYABLE">PLAYABLE</div>
         </div>
       </div>
+
+      <!-- BRICK TERMINATOR -->
+      <div class="game-card" onclick="selectGame('BrickTerminator')">
+        <div class="game-title">Brick Terminator</div>
+        <div class="game-desc">Break bricks, survive chaos, score high.</div>
+        <div class="tags">
+          <div class="tag PLAYABLE">PLAYABLE</div>
+        </div>
+      </div>
+
+      <!-- DODGER -->
+      <div class="game-card" onclick="selectGame('Dodger')">
+        <div class="game-title">Dodger</div>
+        <div class="game-desc">Dodge red squares and survive.</div>
+        <div class="tags">
+          <div class="tag PLAYABLE">PLAYABLE</div>
+        </div>
+      </div>
+
+      <!-- ESCAPE -->
+      <div class="game-card" onclick="selectGame('Escape')">
+        <div class="game-title">Escape</div>
+        <div class="game-desc">Lane-dodge survival challenge.</div>
+        <div class="tags">
+          <div class="tag PLAYABLE">PLAYABLE</div>
+        </div>
+      </div>
+
     </div>
 
     <div class="right-panel">
       <div class="preview-title" id="previewTitle">Select a game</div>
-      <div class="preview-desc" id="previewDesc">Game description will appear here.</div>
-      <button class="play-btn" id="playBtn" style="display:none;" onclick="launchGame()">Play</button>
+      <div class="preview-desc" id="previewDesc">Your selected game will appear here.</div>
+      <iframe id="gameFrame" style="display:none;"></iframe>
     </div>
   </div>
 
   <script>
     const previewTitle = document.getElementById("previewTitle");
     const previewDesc = document.getElementById("previewDesc");
-    const playBtn = document.getElementById("playBtn");
+    const gameFrame = document.getElementById("gameFrame");
 
-    let gameURLs = {
+    const gameURLs = {
       Sportclick: "https://repelhub.github.io/Sportclick/",
-      GameRace: "https://repelhub.github.io/Game-Race/",
-      LaserDrift: "https://repelhub.github.io/Laser-Drift/",
-      NeonTaxi: "https://repelhub.github.io/Neon-Taxi/"
+      TaxiQuest: "https://repelhub.github.io/Taxi-Quest/",
+      SpaceBreaker: "https://repelhub.github.io/Space-Breaker/",
+      InfiniteRun: "https://repelhub.github.io/Infinite-Run/",
+      BrickTerminator: "https://repelhub.github.io/Brick-Terminator/",
+      Dodger: "https://repelhub.github.io/Dodger/",
+      Escape: "https://repelhub.github.io/Escape/",
+      LaserDrift: "https://repelhub.github.io/Laser-Drift/"
     };
 
-    let gameDescriptions = {
+    const descriptions = {
       Sportclick: "Click the balloon, stack points, unlock autoclickers and multipliers.",
-      GameRace: "Dodge lanes, race fast, survive the chaos.",
-      LaserDrift: "Steer through neon chaos, collect orbs, avoid drones.",
-      NeonTaxi: "Pick up passengers, deliver fast, dodge traffic, earn upgrades.",
-      ComingSoon: "This game is still locked inside the Repelhub vault."
+      TaxiQuest: "Pick up passengers, deliver fast, dodge traffic, earn upgrades.",
+      SpaceBreaker: "Shoot asteroids, survive waves, upgrade your ship.",
+      InfiniteRun: "Run forever, dodge obstacles, beat your high score.",
+      BrickTerminator: "Break bricks, survive chaos, score high.",
+      Dodger: "Dodge red squares and survive as long as possible.",
+      Escape: "Lane-dodge survival challenge with increasing speed.",
+      LaserDrift: "Steer through neon chaos, collect orbs, avoid drones."
     };
-
-    let selectedGame = null;
 
     function selectGame(name) {
-      selectedGame = name;
       previewTitle.textContent = name;
-      previewDesc.textContent = gameDescriptions[name] || "No description available.";
-      playBtn.style.display = gameURLs[name] ? "inline-block" : "none";
-    }
-
-    function launchGame() {
-      if (selectedGame && gameURLs[selectedGame]) {
-        window.location.href = gameURLs[selectedGame];
-      }
+      previewDesc.textContent = descriptions[name] || "";
+      gameFrame.src = gameURLs[name];
+      gameFrame.style.display = "block";
     }
   </script>
+
 </body>
 </html>

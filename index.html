@@ -116,16 +116,33 @@
       background: black;
     }
 
-    .preview-title {
-      font-size: 18px;
+    .fullscreen-btn {
+      padding: 8px 16px;
+      background: #ff00ff;
+      border: none;
+      border-radius: 6px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff00ff;
       margin-bottom: 10px;
-      color: #ff00ff;
+      width: 140px;
     }
 
-    .preview-desc {
+    .fullscreen-btn:hover {
+      background: #ff44ff;
+    }
+
+    .recent-list {
+      margin-top: 25px;
+    }
+
+    .recent-item {
       font-size: 14px;
-      opacity: 0.85;
-      margin-bottom: 15px;
+      opacity: 0.9;
+      margin: 4px 0;
+      padding-left: 10px;
+      border-left: 2px solid #00eaff;
     }
   </style>
 </head>
@@ -134,9 +151,27 @@
 
   <div class="container">
     <div class="left-panel">
+
+      <!-- SEARCH BAR -->
+      <input 
+        type="text" 
+        id="searchBar" 
+        placeholder="Search games..." 
+        style="
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 15px;
+          border-radius: 8px;
+          border: 2px solid #00eaff;
+          background: #0d0d15;
+          color: white;
+          font-size: 14px;
+          box-shadow: 0 0 10px #00eaff;
+        ">
+
       <div class="section-title">NOW PLAYING</div>
 
-      <!-- SPORTCLICK -->
+      <!-- GAME CARDS -->
       <div class="game-card" onclick="selectGame('Sportclick')">
         <div class="game-title">Sportclick</div>
         <div class="game-desc">Click-spammer balloon game with upgrades.</div>
@@ -146,7 +181,6 @@
         </div>
       </div>
 
-      <!-- TAXI QUEST -->
       <div class="game-card" onclick="selectGame('TaxiQuest')">
         <div class="game-title">Taxi Quest</div>
         <div class="game-desc">Deliver passengers, dodge traffic, earn cash.</div>
@@ -156,7 +190,6 @@
         </div>
       </div>
 
-      <!-- LASER DRIFT -->
       <div class="game-card" onclick="selectGame('LaserDrift')">
         <div class="game-title">Laser Drift</div>
         <div class="game-desc">Top-down neon drift survival.</div>
@@ -166,7 +199,6 @@
         </div>
       </div>
 
-      <!-- SPACE BREAKER -->
       <div class="game-card" onclick="selectGame('SpaceBreaker')">
         <div class="game-title">Space Breaker</div>
         <div class="game-desc">Shoot asteroids and survive the void.</div>
@@ -175,7 +207,6 @@
         </div>
       </div>
 
-      <!-- INFINITE RUN -->
       <div class="game-card" onclick="selectGame('InfiniteRun')">
         <div class="game-title">Infinite Run</div>
         <div class="game-desc">Endless runner with obstacles and speed.</div>
@@ -184,7 +215,6 @@
         </div>
       </div>
 
-      <!-- BRICK TERMINATOR -->
       <div class="game-card" onclick="selectGame('BrickTerminator')">
         <div class="game-title">Brick Terminator</div>
         <div class="game-desc">Break bricks, survive chaos, score high.</div>
@@ -193,7 +223,6 @@
         </div>
       </div>
 
-      <!-- DODGER -->
       <div class="game-card" onclick="selectGame('Dodger')">
         <div class="game-title">Dodger</div>
         <div class="game-desc">Dodge red squares and survive.</div>
@@ -202,7 +231,6 @@
         </div>
       </div>
 
-      <!-- ESCAPE -->
       <div class="game-card" onclick="selectGame('Escape')">
         <div class="game-title">Escape</div>
         <div class="game-desc">Lane-dodge survival challenge.</div>
@@ -211,12 +239,17 @@
         </div>
       </div>
 
+      <!-- RECENTLY PLAYED -->
+      <div class="section-title recent-list">Recently Played</div>
+      <div id="recentContainer"></div>
+
     </div>
 
     <div class="right-panel">
+      <button class="fullscreen-btn" onclick="goFullscreen()">Fullscreen</button>
+      <iframe id="gameFrame" style="display:none;"></iframe>
       <div class="preview-title" id="previewTitle">Select a game</div>
       <div class="preview-desc" id="previewDesc">Your selected game will appear here.</div>
-      <iframe id="gameFrame" style="display:none;"></iframe>
     </div>
   </div>
 
@@ -224,6 +257,8 @@
     const previewTitle = document.getElementById("previewTitle");
     const previewDesc = document.getElementById("previewDesc");
     const gameFrame = document.getElementById("gameFrame");
+    const recentContainer = document.getElementById("recentContainer");
+    const searchBar = document.getElementById("searchBar");
 
     const gameURLs = {
       Sportclick: "https://repelhub.github.io/Sportclick/",
@@ -252,7 +287,55 @@
       previewDesc.textContent = descriptions[name] || "";
       gameFrame.src = gameURLs[name];
       gameFrame.style.display = "block";
+
+      updateRecent(name);
     }
+
+    function goFullscreen() {
+      if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
+      else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
+      else if (gameFrame.msRequestFullscreen) gameFrame.msRequestFullscreen();
+    }
+
+    function updateRecent(game) {
+      let recent = JSON.parse(localStorage.getItem("recentGames") || "[]");
+
+      recent = recent.filter(g => g !== game);
+      recent.unshift(game);
+
+      recent = recent.slice(0, 3);
+
+      localStorage.setItem("recentGames", JSON.stringify(recent));
+
+      renderRecent();
+    }
+
+    function renderRecent() {
+      let recent = JSON.parse(localStorage.getItem("recentGames") || "[]");
+
+      recentContainer.innerHTML = recent
+        .map(g => `<div class="recent-item">${g}</div>`)
+        .join("");
+    }
+
+    // SEARCH BAR FILTERING
+    searchBar.addEventListener("input", () => {
+      const query = searchBar.value.toLowerCase();
+      const cards = document.querySelectorAll(".game-card");
+
+      cards.forEach(card => {
+        const title = card.querySelector(".game-title").textContent.toLowerCase();
+        const desc = card.querySelector(".game-desc").textContent.toLowerCase();
+
+        if (title.includes(query) || desc.includes(query)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+
+    renderRecent();
   </script>
 
 </body>

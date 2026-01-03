@@ -1,468 +1,417 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Repel's Game Hub</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
-      background: #0a0a0f;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #120820, #020208);
+      color: #f5f5ff;
+      overflow: hidden;
+    }
+
+    /* Top bar */
+    header {
+      height: 60px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      transition: all 0.3s ease;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: linear-gradient(90deg, #190a2c, #220a3d);
+      border-bottom: 1px solid #2a1750;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 2;
+      position: relative;
+    }
+    header .title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    header .subtitle {
+      font-size: 12px;
+      color: #aaa3ff;
+    }
+    header .current-game {
+      text-align: right;
+      font-size: 13px;
+      color: #e0ddff;
+    }
+    header .current-game span {
+      color: #00eaff;
+      font-weight: 600;
     }
 
-    h1 {
-      margin: 20px 0 10px;
-      font-size: 28px;
-      color: var(--accent);
-      text-shadow: 0 0 10px var(--accent);
+    /* Main layout */
+    .main {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 60px);
     }
 
-    :root {
-      --accent: #00eaff;
-      --accent2: #ff00ff;
-      --accent3: #00ff88;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: row;
-      width: 95%;
-      max-width: 1100px;
-      gap: 20px;
-    }
-
-    .left-panel {
-      flex: 1;
-      background: #111;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 15px var(--accent);
-      padding: 20px;
-      border-radius: 12px;
-      height: 80vh;
+    /* Sidebar */
+    .sidebar {
+      border-right: 1px solid #231542;
+      background: radial-gradient(circle at top left, #1b1030, #080213);
+      padding: 12px 10px 12px 16px;
       overflow-y: auto;
-      transition: all 0.3s ease;
     }
-
-    .right-panel {
-      flex: 2;
-      background: #111;
-      border: 2px solid var(--accent2);
-      box-shadow: 0 0 15px var(--accent2);
-      padding: 20px;
-      border-radius: 12px;
-      height: 80vh;
+    .sidebar h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #b6a7ff;
+      margin: 2px 0 10px;
+    }
+    .game-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #6f6b9a;
+      margin: 10px 0 4px;
+    }
+    .game-list {
       display: flex;
       flex-direction: column;
-      transition: all 0.3s ease;
-    }
-
-    .section-title {
-      font-size: 20px;
-      margin-top: 20px;
-      margin-bottom: 10px;
-      color: #ffcc00;
-      text-shadow: 0 0 8px #ffcc00;
+      gap: 6px;
     }
 
     .game-card {
-      background: #1a1a1a;
-      border: 2px solid #333;
+      background: #100a20;
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+      padding: 8px 9px;
+      border: 1px solid #2b1f4a;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: border 0.15s, background 0.15s, transform 0.08s, box-shadow 0.15s;
       position: relative;
     }
-
     .game-card:hover {
-      transform: scale(1.03);
-      border-color: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
+      border-color: #4c3cff;
+      background: #151132;
+      box-shadow: 0 0 12px #4c3cff44;
+      transform: translateY(-1px);
     }
-
-    .favorite-star {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: 20px;
-      cursor: pointer;
-      color: white;
-      opacity: 0.6;
-      transition: 0.2s;
+    .game-card.active {
+      border-color: #00eaff;
+      box-shadow: 0 0 12px #00eaff55;
+      background: #15152b;
     }
-
-    .favorite-star.active {
-      color: gold;
-      opacity: 1;
-      text-shadow: 0 0 8px gold;
-    }
-
-    .game-title {
-      font-size: 18px;
-      color: var(--accent);
-      margin-bottom: 5px;
-    }
-
-    .game-desc {
+    .game-name {
       font-size: 14px;
-      opacity: 0.8;
-      margin-bottom: 8px;
+      font-weight: 600;
+      color: #f6f3ff;
+      margin-bottom: 2px;
+    }
+    .game-tagline {
+      font-size: 11px;
+      color: #a7a2d9;
+      margin-bottom: 4px;
+    }
+    .game-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #7a769f;
+    }
+    .game-genre {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a4ffeb;
+    }
+    .game-status {
+      font-size: 10px;
+      color: #ffdd88;
     }
 
-    iframe {
+    /* Game view */
+    .game-view {
+      position: relative;
+      padding: 12px 16px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .game-frame-wrap {
       flex: 1;
+      border-radius: 14px;
+      border: 1px solid #28315d;
+      background: radial-gradient(circle at top, #191733, #05040d);
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      position: relative;
+    }
+    .game-frame-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, #4257ff33, transparent 60%);
+      mix-blend-mode: screen;
+    }
+    iframe {
       width: 100%;
+      height: 100%;
       border: none;
-      border-radius: 10px;
-      background: black;
+      background: #000;
     }
 
-    .fullscreen-btn, .theme-btn, .save-score-btn {
-      padding: 8px 16px;
-      background: var(--accent2);
-      border: none;
-      border-radius: 6px;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--accent2);
-      margin-bottom: 10px;
-      width: 150px;
-      transition: 0.2s;
+    .game-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #bcb8ff;
+      padding: 4px 6px 0;
+    }
+    .game-details-left {
+      max-width: 70%;
+    }
+    .game-details-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .game-details-genre {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 10px;
+      color: #7ef8ff;
+    }
+    .game-details-desc {
+      font-size: 11px;
+      color: #a9a7d9;
+      margin-top: 2px;
+    }
+    .game-details-right {
+      text-align: right;
+      font-size: 11px;
+      color: #8f8bff;
+    }
+    .game-url {
+      font-size: 10px;
+      color: #6d9fff;
+      word-break: break-all;
+      opacity: 0.8;
     }
 
-    .fullscreen-btn:hover,
-    .theme-btn:hover,
-    .save-score-btn:hover {
-      background: #ff55ff;
-    }
-
-    .preview-title {
-      font-size: 20px;
-      margin-top: 10px;
-      color: var(--accent2);
-    }
-
-    .preview-desc {
-      font-size: 14px;
-      opacity: 0.85;
-      margin-bottom: 10px;
-    }
-
-    .highscore-display {
-      font-size: 16px;
-      color: #00ff88;
-      margin-bottom: 10px;
-    }
-
-    .recent-item, .favorite-item, .mostplayed-item {
-      font-size: 14px;
-      opacity: 0.9;
-      margin: 4px 0;
-      padding-left: 10px;
-      border-left: 2px solid var(--accent);
+    @media (max-width: 900px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        height: 220px;
+        border-right: none;
+        border-bottom: 1px solid #231542;
+      }
+      .game-view {
+        height: calc(100vh - 60px - 220px);
+      }
     }
   </style>
 </head>
 <body>
-
-  <h1>Repel's Game Hub</h1>
-
-  <div class="container">
-    <div class="left-panel">
-
-      <!-- SEARCH BAR -->
-      <input 
-        type="text" 
-        id="searchBar" 
-        placeholder="Search games..." 
-        style="
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 15px;
-          border-radius: 8px;
-          border: 2px solid var(--accent);
-          background: #0d0d15;
-          color: white;
-          font-size: 14px;
-          box-shadow: 0 0 10px var(--accent);
-        ">
-
-      <div class="section-title">NOW PLAYING</div>
-
-      <!-- GAME CARDS -->
-      <div class="game-card" onclick="selectGame('Sportclick')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'Sportclick')">★</div>
-        <div class="game-title">Sportclick</div>
-        <div class="game-desc">Click-spammer balloon game with upgrades.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('TaxiQuest')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'TaxiQuest')">★</div>
-        <div class="game-title">Taxi Quest</div>
-        <div class="game-desc">Deliver passengers, dodge traffic, earn cash.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('LaserDrift')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'LaserDrift')">★</div>
-        <div class="game-title">Laser Drift</div>
-        <div class="game-desc">Top-down neon drift survival.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('SpaceBreaker')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'SpaceBreaker')">★</div>
-        <div class="game-title">Space Breaker</div>
-        <div class="game-desc">Shoot asteroids and survive the void.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('InfiniteRun')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'InfiniteRun')">★</div>
-        <div class="game-title">Infinite Run</div>
-        <div class="game-desc">Endless runner with obstacles and speed.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('BrickTerminator')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'BrickTerminator')">★</div>
-        <div class="game-title">Brick Terminator</div>
-        <div class="game-desc">Break bricks, survive chaos, score high.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('Dodger')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'Dodger')">★</div>
-        <div class="game-title">Dodger</div>
-        <div class="game-desc">Dodge red squares and survive.</div>
-      </div>
-
-      <div class="game-card" onclick="selectGame('Escape')">
-        <div class="favorite-star" onclick="toggleFavorite(event, 'Escape')">★</div>
-        <div class="game-title">Escape</div>
-        <div class="game-desc">Lane-dodge survival challenge.</div>
-      </div>
-
-      <!-- RECENTLY PLAYED -->
-      <div class="section-title">Recently Played</div>
-      <div id="recentContainer"></div>
-
-      <!-- FAVORITES -->
-      <div class="section-title">Favorites</div>
-      <div id="favoriteContainer"></div>
-
-      <!-- MOST PLAYED -->
-      <div class="section-title">Most Played</div>
-      <div id="mostPlayedContainer"></div>
-
-    </div>
-
-    <div class="right-panel">
-      <button class="fullscreen-btn" onclick="goFullscreen()">Fullscreen</button>
-      <button class="theme-btn" onclick="cycleTheme()">Switch Theme</button>
-
-      <iframe id="gameFrame" style="display:none;"></iframe>
-
-      <div class="preview-title" id="previewTitle">Select a game</div>
-      <div class="preview-desc" id="previewDesc">Your selected game will appear here.</div>
-      <div class="highscore-display" id="highscoreDisplay"></div>
-      <button class="save-score-btn" id="saveScoreBtn" style="display:none;" onclick="saveScore()">Save High Score</button>
-    </div>
+<header>
+  <div>
+    <div class="title">Repel's Game Hub</div>
+    <div class="subtitle">Neon arcade of tiny web games</div>
   </div>
+  <div class="current-game">
+    Now playing:<br>
+    <span id="currentGameName">None</span>
+  </div>
+</header>
 
-  <script>
-    const previewTitle = document.getElementById("previewTitle");
-    const previewDesc = document.getElementById("previewDesc");
-    const highscoreDisplay = document.getElementById("highscoreDisplay");
-    const saveScoreBtn = document.getElementById("saveScoreBtn");
-    const gameFrame = document.getElementById("gameFrame");
+<div class="main">
+  <aside class="sidebar">
+    <h2>Library</h2>
 
-    const recentContainer = document.getElementById("recentContainer");
-    const favoriteContainer = document.getElementById("favoriteContainer");
-    const mostPlayedContainer = document.getElementById("mostPlayedContainer");
+    <div class="game-section-title">All Games</div>
+    <div class="game-list" id="gameList"></div>
+  </aside>
 
-    const searchBar = document.getElementById("searchBar");
+  <section class="game-view">
+    <div class="game-frame-wrap">
+      <iframe id="gameFrame" src="" title="Game"></iframe>
+    </div>
+    <div class="game-details">
+      <div class="game-details-left">
+        <div class="game-details-title" id="detailsTitle">Select a game</div>
+        <div class="game-details-genre" id="detailsGenre"></div>
+        <div class="game-details-desc" id="detailsDesc">Choose a game from the left to start playing.</div>
+      </div>
+      <div class="game-details-right">
+        <div>Game URL:</div>
+        <div class="game-url" id="detailsUrl">—</div>
+      </div>
+    </div>
+  </section>
+</div>
 
-    let currentGame = null;
+<script>
+  const games = [
+    {
+      id: "sportclick",
+      name: "Sportclick",
+      genre: "Clicker / Sports",
+      tagline: "Mash clicks to rack up insane scores.",
+      description: "Fast-paced sports clicker. Hammer the button, chase high scores, and beat your personal best.",
+      url: "https://repelhub.github.io/Sportclick/"
+    },
+    {
+      id: "taxi-quest",
+      name: "Taxi Quest",
+      genre: "Arcade / Time Trial",
+      tagline: "Race the clock, deliver everyone.",
+      description: "Pick up passengers, dodge traffic, and make it to the destination before time runs out.",
+      url: "https://repelhub.github.io/Taxi-Quest/"
+    },
+    {
+      id: "laser-drift",
+      name: "Laser Drift",
+      genre: "Arcade / Reaction",
+      tagline: "Slide through lasers at the last second.",
+      description: "Drift around incoming laser walls and survive as long as you can in a tight arena.",
+      url: "https://repelhub.github.io/Laser-Drift/"
+    },
+    {
+      id: "space-breaker",
+      name: "Space Breaker",
+      genre: "Breakout",
+      tagline: "Classic bricks, neon galaxy style.",
+      description: "Break bricks in a neon starfield, catch power-ups, and keep the ball from drifting into space.",
+      url: "https://repelhub.github.io/Space-Breaker/"
+    },
+    {
+      id: "infinite-run",
+      name: "Infinite Run",
+      genre: "Endless Runner",
+      tagline: "Run forever, or die trying.",
+      description: "Jump, slide, and dodge obstacles in a never-ending neon corridor with rising speed.",
+      url: "https://repelhub.github.io/Infinite-Run/"
+    },
+    {
+      id: "brick-terminator",
+      name: "Brick Terminator",
+      genre: "Arcade / Breaker",
+      tagline: "Smash everything, no brick survives.",
+      description: "A more aggressive brick breaker with rapid-fire power and chained explosions.",
+      url: "https://repelhub.github.io/Brick-Terminator/"
+    },
+    {
+      id: "dodger",
+      name: "Dodger",
+      genre: "Dodge / Survival",
+      tagline: "Nothing but you and incoming chaos.",
+      description: "Move a tiny ship through bullet patterns and hazards. No shooting, only survival.",
+      url: "https://repelhub.github.io/Dodger/"
+    },
+    {
+      id: "escape",
+      name: "Escape",
+      genre: "Puzzle / Maze",
+      tagline: "Find the exit under pressure.",
+      description: "Navigate compact neon mazes while a timer ticks down and walls close behind you.",
+      url: "https://repelhub.github.io/Escape/"
+    },
 
-    const gameURLs = {
-      Sportclick: "https://repelhub.github.io/Sportclick/",
-      TaxiQuest: "https://repelhub.github.io/Taxi-Quest/",
-      SpaceBreaker: "https://repelhub.github.io/Space-Breaker/",
-      InfiniteRun: "https://repelhub.github.io/Infinite-Run/",
-      BrickTerminator: "https://repelhub.github.io/Brick-Terminator/",
-      Dodger: "https://repelhub.github.io/Dodger/",
-      Escape: "https://repelhub.github.io/Escape/",
-      LaserDrift: "https://repelhub.github.io/Laser-Drift/"
-    };
-
-    const descriptions = {
-      Sportclick: "Click the balloon, stack points, unlock autoclickers and multipliers.",
-      TaxiQuest: "Pick up passengers, deliver fast, dodge traffic, earn upgrades.",
-      SpaceBreaker: "Shoot asteroids, survive waves, upgrade your ship.",
-      InfiniteRun: "Run forever, dodge obstacles, beat your high score.",
-      BrickTerminator: "Break bricks, survive chaos, score high.",
-      Dodger: "Dodge red squares and survive as long as possible.",
-      Escape: "Lane-dodge survival challenge with increasing speed.",
-      LaserDrift: "Steer through neon chaos, collect orbs, avoid drones."
-    };
-
-    function selectGame(name) {
-      currentGame = name;
-
-      previewTitle.textContent = name;
-      previewDesc.textContent = descriptions[name];
-      gameFrame.src = gameURLs[name];
-      gameFrame.style.display = "block";
-
-      saveScoreBtn.style.display = "inline-block";
-
-      updateRecent(name);
-      updateMostPlayed(name);
-      updateHighscoreDisplay();
+    /* NEW GAMES */
+    {
+      id: "neon-heist",
+      name: "Neon Heist",
+      genre: "Stealth / Heist",
+      tagline: "Sneak past guards, grab the loot, escape.",
+      description: "Top-down stealth heist. Avoid guard vision cones, steal glowing loot, and reach the exit alive.",
+      url: "https://repelhub.github.io/Neon-Heist/"
+    },
+    {
+      id: "neon-grand-prix",
+      name: "Neon Grand Prix",
+      genre: "Racing",
+      tagline: "Storm horizon racing with car upgrades.",
+      description: "Accelerate through a stormy neon city, dodge traffic, beat AI racers, and buy faster cars.",
+      url: "https://repelhub.github.io/Neon-Grand-Prix/"
+    },
+    {
+      id: "hyper-slide",
+      name: "Hyper Slide",
+      genre: "Lane Runner",
+      tagline: "Switch lanes at hyper speed.",
+      description: "Swap between lanes, dodge red blocks, and collect cyan orbs as speed ramps up forever.",
+      url: "https://repelhub.github.io/Hyper-Slide/"
+    },
+    {
+      id: "circuit-clash",
+      name: "Circuit Clash",
+      genre: "Arena / Survival",
+      tagline: "Twin-stick style survival against neon drones.",
+      description: "Dodge, shoot, and survive endless waves of robotic enemies in a neon arena.",
+      url: "https://repelhub.github.io/Circuit-Clash/"
     }
+  ];
 
-    function goFullscreen() {
-      if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
-      else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
-      else if (gameFrame.msRequestFullscreen) gameFrame.msRequestFullscreen();
-    }
+  const gameListEl = document.getElementById("gameList");
+  const gameFrame = document.getElementById("gameFrame");
+  const currentGameNameEl = document.getElementById("currentGameName");
+  const detailsTitleEl = document.getElementById("detailsTitle");
+  const detailsGenreEl = document.getElementById("detailsGenre");
+  const detailsDescEl = document.getElementById("detailsDesc");
+  const detailsUrlEl = document.getElementById("detailsUrl");
 
-    function saveScore() {
-      const score = prompt("Enter your high score:");
+  function createGameCard(game) {
+    const card = document.createElement("div");
+    card.className = "game-card";
+    card.dataset.gameId = game.id;
 
-      if (score !== null && score !== "" && !isNaN(score)) {
-        localStorage.setItem("highscore_" + currentGame, score);
-        updateHighscoreDisplay();
-      }
-    }
+    card.innerHTML = `
+      <div class="game-name">${game.name}</div>
+      <div class="game-tagline">${game.tagline}</div>
+      <div class="game-meta">
+        <div class="game-genre">${game.genre}</div>
+        <div class="game-status">Play</div>
+      </div>
+    `;
 
-    function updateHighscoreDisplay() {
-      const score = localStorage.getItem("highscore_" + currentGame);
-      highscoreDisplay.textContent = score ? "High Score: " + score : "High Score: None";
-    }
+    card.addEventListener("click", () => loadGame(game.id));
+    return card;
+  }
 
-    function updateRecent(game) {
-      let recent = JSON.parse(localStorage.getItem("recentGames") || "[]");
-
-      recent = recent.filter(g => g !== game);
-      recent.unshift(game);
-      recent = recent.slice(0, 3);
-
-      localStorage.setItem("recentGames", JSON.stringify(recent));
-      renderRecent();
-    }
-
-    function renderRecent() {
-      let recent = JSON.parse(localStorage.getItem("recentGames") || "[]");
-
-      recentContainer.innerHTML = recent
-        .map(g => `<div class="recent-item">${g}</div>`)
-        .join("");
-    }
-
-    function toggleFavorite(event, game) {
-      event.stopPropagation();
-
-      let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-      if (favs.includes(game)) {
-        favs = favs.filter(f => f !== game);
-      } else {
-        favs.push(game);
-      }
-
-      localStorage.setItem("favorites", JSON.stringify(favs));
-      renderFavorites();
-      updateStarIcons();
-    }
-
-    function renderFavorites() {
-      let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-      favoriteContainer.innerHTML = favs
-        .map(g => `<div class="favorite-item">${g}</div>`)
-        .join("");
-    }
-
-    function updateStarIcons() {
-      let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-      document.querySelectorAll(".favorite-star").forEach(star => {
-        const game = star.getAttribute("onclick").match(/'(.+)'/)[1];
-        star.classList.toggle("active", favs.includes(game));
-      });
-    }
-
-    function updateMostPlayed(game) {
-      let plays = JSON.parse(localStorage.getItem("mostPlayed") || "{}");
-
-      plays[game] = (plays[game] || 0) + 1;
-
-      localStorage.setItem("mostPlayed", JSON.stringify(plays));
-      renderMostPlayed();
-    }
-
-    function renderMostPlayed() {
-      let plays = JSON.parse(localStorage.getItem("mostPlayed") || "{}");
-
-      let sorted = Object.entries(plays)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3);
-
-      mostPlayedContainer.innerHTML = sorted
-        .map(([g, count]) => `<div class="mostplayed-item">${g} — ${count} plays</div>`)
-        .join("");
-    }
-
-    function cycleTheme() {
-      let theme = localStorage.getItem("theme") || "blue";
-
-      if (theme === "blue") theme = "pink";
-      else if (theme === "pink") theme = "green";
-      else theme = "blue";
-
-      localStorage.setItem("theme", theme);
-      applyTheme();
-    }
-
-    function applyTheme() {
-      let theme = localStorage.getItem("theme") || "blue";
-
-      if (theme === "blue") {
-        document.documentElement.style.setProperty("--accent", "#00eaff");
-        document.documentElement.style.setProperty("--accent2", "#ff00ff");
-      }
-      if (theme === "pink") {
-        document.documentElement.style.setProperty("--accent", "#ff00aa");
-        document.documentElement.style.setProperty("--accent2", "#ff66ff");
-      }
-      if (theme === "green") {
-        document.documentElement.style.setProperty("--accent", "#00ff88");
-        document.documentElement.style.setProperty("--accent2", "#00ffaa");
-      }
-    }
-
-    searchBar.addEventListener("input", () => {
-      const query = searchBar.value.toLowerCase();
-      const cards = document.querySelectorAll(".game-card");
-
-      cards.forEach(card => {
-        const title = card.querySelector(".game-title").textContent.toLowerCase();
-        const desc = card.querySelector(".game-desc").textContent.toLowerCase();
-
-        card.style.display = (title.includes(query) || desc.includes(query)) ? "block" : "none";
-      });
+  function renderGameList() {
+    games.forEach(game => {
+      gameListEl.appendChild(createGameCard(game));
     });
+  }
 
-    applyTheme();
-    renderRecent();
-    renderFavorites();
-    renderMostPlayed();
-    updateStarIcons();
-  </script>
+  function setActiveCard(gameId) {
+    document.querySelectorAll(".game-card").forEach(card => {
+      card.classList.toggle("active", card.dataset.gameId === gameId);
+    });
+  }
 
+  function loadGame(gameId) {
+    const game = games.find(g => g.id === gameId);
+    if (!game) return;
+
+    setActiveCard(gameId);
+
+    gameFrame.src = game.url;
+    currentGameNameEl.textContent = game.name;
+    detailsTitleEl.textContent = game.name;
+    detailsGenreEl.textContent = game.genre.toUpperCase();
+    detailsDescEl.textContent = game.description;
+    detailsUrlEl.textContent = game.url;
+  }
+
+  renderGameList();
+
+  // Auto-load first game
+  if (games.length > 0) loadGame(games[0].id);
+</script>
 </body>
 </html>

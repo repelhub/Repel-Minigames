@@ -4,414 +4,155 @@
   <meta charset="UTF-8">
   <title>Repel's Game Hub</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
-      font-family: "Segoe UI", system-ui, sans-serif;
-      background: radial-gradient(circle at top, #120820, #020208);
-      color: #f5f5ff;
-      overflow: hidden;
+      background: #050505;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
     }
 
-    /* Top bar */
-    header {
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: linear-gradient(90deg, #190a2c, #220a3d);
-      border-bottom: 1px solid #2a1750;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      z-index: 2;
-      position: relative;
-    }
-    header .title {
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #ffffff;
-    }
-    header .subtitle {
-      font-size: 12px;
-      color: #aaa3ff;
-    }
-    header .current-game {
-      text-align: right;
-      font-size: 13px;
-      color: #e0ddff;
-    }
-    header .current-game span {
-      color: #00eaff;
-      font-weight: 600;
+    h1 {
+      text-align: center;
+      color: #00ccff;
+      text-shadow: 0 0 10px #00ccff;
+      padding: 20px;
+      font-size: 2.2rem;
     }
 
-    /* Main layout */
-    .main {
+    .grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      height: calc(100vh - 60px);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    /* Sidebar */
-    .sidebar {
-      border-right: 1px solid #231542;
-      background: radial-gradient(circle at top left, #1b1030, #080213);
-      padding: 12px 10px 12px 16px;
-      overflow-y: auto;
-    }
-    .sidebar h2 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #b6a7ff;
-      margin: 2px 0 10px;
-    }
-    .game-section-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #6f6b9a;
-      margin: 10px 0 4px;
-    }
-    .game-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .game-card {
-      background: #100a20;
-      border-radius: 10px;
-      padding: 8px 9px;
-      border: 1px solid #2b1f4a;
+    .card {
+      background: #0d0d0d;
+      border: 2px solid #00ccff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 12px #00ccff;
       cursor: pointer;
-      transition: border 0.15s, background 0.15s, transform 0.08s, box-shadow 0.15s;
+      transition: 0.2s;
       position: relative;
-    }
-    .game-card:hover {
-      border-color: #4c3cff;
-      background: #151132;
-      box-shadow: 0 0 12px #4c3cff44;
-      transform: translateY(-1px);
-    }
-    .game-card.active {
-      border-color: #00eaff;
-      box-shadow: 0 0 12px #00eaff55;
-      background: #15152b;
-    }
-    .game-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f6f3ff;
-      margin-bottom: 2px;
-    }
-    .game-tagline {
-      font-size: 11px;
-      color: #a7a2d9;
-      margin-bottom: 4px;
-    }
-    .game-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: #7a769f;
-    }
-    .game-genre {
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #a4ffeb;
-    }
-    .game-status {
-      font-size: 10px;
-      color: #ffdd88;
     }
 
-    /* Game view */
-    .game-view {
-      position: relative;
-      padding: 12px 16px 12px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px #00ccff;
     }
-    .game-frame-wrap {
-      flex: 1;
-      border-radius: 14px;
-      border: 1px solid #28315d;
-      background: radial-gradient(circle at top, #191733, #05040d);
-      overflow: hidden;
-      box-shadow: 0 0 25px rgba(0,0,0,0.7);
-      position: relative;
+
+    .card h3 {
+      margin: 0;
+      color: #00ccff;
+      font-size: 1.2rem;
+      text-shadow: 0 0 6px #00ccff;
     }
-    .game-frame-wrap::before {
-      content: "";
+
+    .card p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    .badge {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at top, #4257ff33, transparent 60%);
-      mix-blend-mode: screen;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #000;
+      top: 12px;
+      right: 12px;
+      background: hotpink;
+      color: #000;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      box-shadow: 0 0 6px hotpink;
     }
 
-    .game-details {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #bcb8ff;
-      padding: 4px 6px 0;
+    .now-playing {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #00ccff;
+      margin-top: 30px;
+      text-shadow: 0 0 8px #00ccff;
     }
-    .game-details-left {
-      max-width: 70%;
-    }
-    .game-details-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .game-details-genre {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 10px;
-      color: #7ef8ff;
-    }
-    .game-details-desc {
-      font-size: 11px;
-      color: #a9a7d9;
-      margin-top: 2px;
-    }
-    .game-details-right {
-      text-align: right;
-      font-size: 11px;
-      color: #8f8bff;
-    }
-    .game-url {
-      font-size: 10px;
-      color: #6d9fff;
-      word-break: break-all;
-      opacity: 0.8;
+
+    iframe {
+      display: block;
+      margin: 20px auto;
+      width: 90%;
+      height: 500px;
+      border: 2px solid #00ccff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ccff;
+      background: #111;
     }
 
     @media (max-width: 900px) {
-      .main {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .grid {
         grid-template-columns: 1fr;
       }
-      .sidebar {
-        height: 220px;
-        border-right: none;
-        border-bottom: 1px solid #231542;
-      }
-      .game-view {
-        height: calc(100vh - 60px - 220px);
+
+      iframe {
+        height: 400px;
       }
     }
   </style>
 </head>
 <body>
-<header>
-  <div>
-    <div class="title">Repel's Game Hub</div>
-    <div class="subtitle">Neon arcade of tiny web games</div>
-  </div>
-  <div class="current-game">
-    Now playing:<br>
-    <span id="currentGameName">None</span>
-  </div>
-</header>
 
-<div class="main">
-  <aside class="sidebar">
-    <h2>Library</h2>
+  <h1>Repel's Game Hub</h1>
 
-    <div class="game-section-title">All Games</div>
-    <div class="game-list" id="gameList"></div>
-  </aside>
-
-  <section class="game-view">
-    <div class="game-frame-wrap">
-      <iframe id="gameFrame" src="" title="Game"></iframe>
+  <div class="grid">
+    <div class="card" onclick="loadGame('Dodger', 'https://repelhub.github.io/Dodger/')">
+      <h3>Dodger</h3>
+      <p>Dodge falling blocks and survive.</p>
     </div>
-    <div class="game-details">
-      <div class="game-details-left">
-        <div class="game-details-title" id="detailsTitle">Select a game</div>
-        <div class="game-details-genre" id="detailsGenre"></div>
-        <div class="game-details-desc" id="detailsDesc">Choose a game from the left to start playing.</div>
-      </div>
-      <div class="game-details-right">
-        <div>Game URL:</div>
-        <div class="game-url" id="detailsUrl">—</div>
-      </div>
+
+    <div class="card" onclick="loadGame('Escape', 'https://repelhub.github.io/Escape/')">
+      <h3>Escape</h3>
+      <p>Outrun the police in a neon chase.</p>
     </div>
-  </section>
-</div>
 
-<script>
-  const games = [
-    {
-      id: "sportclick",
-      name: "Sportclick",
-      genre: "Clicker / Sports",
-      tagline: "Mash clicks to rack up insane scores.",
-      description: "Fast-paced sports clicker. Hammer the button, chase high scores, and beat your personal best.",
-      url: "https://repelhub.github.io/Sportclick/"
-    },
-    {
-      id: "taxi-quest",
-      name: "Taxi Quest",
-      genre: "Arcade / Time Trial",
-      tagline: "Race the clock, deliver everyone.",
-      description: "Pick up passengers, dodge traffic, and make it to the destination before time runs out.",
-      url: "https://repelhub.github.io/Taxi-Quest/"
-    },
-    {
-      id: "laser-drift",
-      name: "Laser Drift",
-      genre: "Arcade / Reaction",
-      tagline: "Slide through lasers at the last second.",
-      description: "Drift around incoming laser walls and survive as long as you can in a tight arena.",
-      url: "https://repelhub.github.io/Laser-Drift/"
-    },
-    {
-      id: "space-breaker",
-      name: "Space Breaker",
-      genre: "Breakout",
-      tagline: "Classic bricks, neon galaxy style.",
-      description: "Break bricks in a neon starfield, catch power-ups, and keep the ball from drifting into space.",
-      url: "https://repelhub.github.io/Space-Breaker/"
-    },
-    {
-      id: "infinite-run",
-      name: "Infinite Run",
-      genre: "Endless Runner",
-      tagline: "Run forever, or die trying.",
-      description: "Jump, slide, and dodge obstacles in a never-ending neon corridor with rising speed.",
-      url: "https://repelhub.github.io/Infinite-Run/"
-    },
-    {
-      id: "brick-terminator",
-      name: "Brick Terminator",
-      genre: "Arcade / Breaker",
-      tagline: "Smash everything, no brick survives.",
-      description: "A more aggressive brick breaker with rapid-fire power and chained explosions.",
-      url: "https://repelhub.github.io/Brick-Terminator/"
-    },
-    {
-      id: "dodger",
-      name: "Dodger",
-      genre: "Dodge / Survival",
-      tagline: "Nothing but you and incoming chaos.",
-      description: "Move a tiny ship through bullet patterns and hazards. No shooting, only survival.",
-      url: "https://repelhub.github.io/Dodger/"
-    },
-    {
-      id: "escape",
-      name: "Escape",
-      genre: "Puzzle / Maze",
-      tagline: "Find the exit under pressure.",
-      description: "Navigate compact neon mazes while a timer ticks down and walls close behind you.",
-      url: "https://repelhub.github.io/Escape/"
-    },
+    <div class="card" onclick="loadGame('Sportclick', 'https://repelhub.github.io/Sportclick/')">
+      <h3>Sportclick</h3>
+      <p>Fast-paced clicking challenge.</p>
+    </div>
 
-    /* NEW GAMES */
-    {
-      id: "neon-heist",
-      name: "Neon Heist",
-      genre: "Stealth / Heist",
-      tagline: "Sneak past guards, grab the loot, escape.",
-      description: "Top-down stealth heist. Avoid guard vision cones, steal glowing loot, and reach the exit alive.",
-      url: "https://repelhub.github.io/Neon-Heist/"
-    },
-    {
-      id: "neon-grand-prix",
-      name: "Neon Grand Prix",
-      genre: "Racing",
-      tagline: "Storm horizon racing with car upgrades.",
-      description: "Accelerate through a stormy neon city, dodge traffic, beat AI racers, and buy faster cars.",
-      url: "https://repelhub.github.io/Neon-Grand-Prix/"
-    },
-    {
-      id: "hyper-slide",
-      name: "Hyper Slide",
-      genre: "Lane Runner",
-      tagline: "Switch lanes at hyper speed.",
-      description: "Swap between lanes, dodge red blocks, and collect cyan orbs as speed ramps up forever.",
-      url: "https://repelhub.github.io/Hyper-Slide/"
-    },
-    {
-      id: "circuit-clash",
-      name: "Circuit Clash",
-      genre: "Arena / Survival",
-      tagline: "Twin-stick style survival against neon drones.",
-      description: "Dodge, shoot, and survive endless waves of robotic enemies in a neon arena.",
-      url: "https://repelhub.github.io/Circuit-Clash/"
+    <div class="card" onclick="loadGame('Brick Terminator', 'https://repelhub.github.io/Brick-Terminator/')">
+      <div class="badge">NEW!</div>
+      <h3>Brick Terminator</h3>
+      <p>Neon brick-breaking chaos.</p>
+    </div>
+
+    <div class="card" onclick="loadGame('Infinite Run', 'https://repelhub.github.io/Infinite-Run/')">
+      <div class="badge">NEW!</div>
+      <h3>Infinite Run</h3>
+      <p>Jump, dodge, and survive forever.</p>
+    </div>
+
+    <div class="card" onclick="loadGame('Space Breaker', 'https://repelhub.github.io/Space-Breaker/')">
+      <h3>Space Breaker</h3>
+      <p>Blast neon enemies in space.</p>
+    </div>
+  </div>
+
+  <div class="now-playing" id="nowPlaying">Now Playing: None</div>
+  <iframe id="gameFrame" src=""></iframe>
+
+  <script>
+    function loadGame(name, url) {
+      document.getElementById("nowPlaying").innerText = "Now Playing: " + name;
+      document.getElementById("gameFrame").src = url;
     }
-  ];
+  </script>
 
-  const gameListEl = document.getElementById("gameList");
-  const gameFrame = document.getElementById("gameFrame");
-  const currentGameNameEl = document.getElementById("currentGameName");
-  const detailsTitleEl = document.getElementById("detailsTitle");
-  const detailsGenreEl = document.getElementById("detailsGenre");
-  const detailsDescEl = document.getElementById("detailsDesc");
-  const detailsUrlEl = document.getElementById("detailsUrl");
-
-  function createGameCard(game) {
-    const card = document.createElement("div");
-    card.className = "game-card";
-    card.dataset.gameId = game.id;
-
-    card.innerHTML = `
-      <div class="game-name">${game.name}</div>
-      <div class="game-tagline">${game.tagline}</div>
-      <div class="game-meta">
-        <div class="game-genre">${game.genre}</div>
-        <div class="game-status">Play</div>
-      </div>
-    `;
-
-    card.addEventListener("click", () => loadGame(game.id));
-    return card;
-  }
-
-  function renderGameList() {
-    games.forEach(game => {
-      gameListEl.appendChild(createGameCard(game));
-    });
-  }
-
-  function setActiveCard(gameId) {
-    document.querySelectorAll(".game-card").forEach(card => {
-      card.classList.toggle("active", card.dataset.gameId === gameId);
-    });
-  }
-
-  function loadGame(gameId) {
-    const game = games.find(g => g.id === gameId);
-    if (!game) return;
-
-    setActiveCard(gameId);
-
-    gameFrame.src = game.url;
-    currentGameNameEl.textContent = game.name;
-    detailsTitleEl.textContent = game.name;
-    detailsGenreEl.textContent = game.genre.toUpperCase();
-    detailsDescEl.textContent = game.description;
-    detailsUrlEl.textContent = game.url;
-  }
-
-  renderGameList();
-
-  // Auto-load first game
-  if (games.length > 0) loadGame(games[0].id);
-</script>
 </body>
 </html>
